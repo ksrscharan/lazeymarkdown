@@ -1,30 +1,25 @@
 import Dexie, { type Table } from 'dexie';
 
-export interface Document {
+export interface DocMetadata {
   id?: number;
   title: string;
-  content: string;
   updatedAt: number;
-  opened: boolean
+}
+
+export interface DocContent {
+  id: number;
+  content: string;
 }
 
 export class MarkdownDB extends Dexie {
-  docs!: Table<Document>;
+  metadata!: Table<DocMetadata>;
+  contents!: Table<DocContent>;
 
   constructor() {
     super('MarkdownDB');
     this.version(1).stores({
-      docs: '++id, title, updatedAt'
-    });
-
-    this.on('populate', () => {
-      this.docs.add({
-        id: 1,
-        title: 'Welcome Project',
-        content: '# Welcome to Lazeymarkdown <3',
-        updatedAt: Date.now(),
-        opened: true
-      });
+      metadata: '++id, title, updatedAt, currentlyOpen',
+      contents: 'id'
     });
   }
 }
