@@ -145,6 +145,17 @@ html {
 
 }
 
+.rename-title {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: white;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    margin-left: 8px;
+}
+
 @media (max-width: 768px) {
     .markdown-container {
         flex-direction: column;
