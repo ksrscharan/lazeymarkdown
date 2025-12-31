@@ -7,10 +7,6 @@ import rehypeHighlight from 'rehype-highlight';
 type Props = {
     activeId: number | undefined
 }
-
-
-
-
 function PreviewArea({ activeId }: Props) {
     const file = fetchFileContentById(activeId);
 

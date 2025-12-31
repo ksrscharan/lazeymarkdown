@@ -62,14 +62,12 @@ export const deleteDoc = async (docId: number | undefined) => {
         let nextId: number | undefined;
 
         if (count <= 1) {
-            // If it's the last one, create the replacement first
             nextId = await db.metadata.add({
                 title: "Untitled Document",
                 updatedAt: Date.now(),
             });
             await db.contents.add({ id: nextId as number, content: '' });
         } else {
-            // If others exist, find the first one that isn't the one being deleted
             const all = await db.metadata.toArray();
             const fallback = all.find(d => d.id !== docId);
             nextId = fallback?.id;
@@ -78,7 +76,7 @@ export const deleteDoc = async (docId: number | undefined) => {
         await db.metadata.delete(docId);
         await db.contents.delete(docId);
 
-        return nextId; // Return the ID the UI should switch to
+        return nextId;
     });
 };
 
