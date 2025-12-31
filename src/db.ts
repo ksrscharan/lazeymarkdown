@@ -18,7 +18,7 @@ export class MarkdownDB extends Dexie {
   constructor() {
     super('MarkdownDB');
     this.version(1).stores({
-      metadata: '++id, title, updatedAt, currentlyOpen',
+      metadata: '++id, title, updatedAt',
       contents: 'id'
     });
   }

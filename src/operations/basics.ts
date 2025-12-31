@@ -29,35 +29,56 @@ export const fetchList = () => {
     return useLiveQuery(() => db.metadata.toArray())
 }
 
-export const fetchFileContentById = (docId: number) => {
-  return useLiveQuery(async () => {
-    const metadata = await db.metadata.get(docId);
-    const contentObj = await db.contents.get(docId);
-    return { 
-      metadata, 
-      content: contentObj?.content || '' 
-    };
-  }, [docId]);
+export const fetchFileContentById = (docId: number | undefined) => {
+    return useLiveQuery(async () => {
+        if (docId === undefined) return { metadata: null, content: '' };
+        const metadata = await db.metadata.get(docId);
+        const contentObj = await db.contents.get(docId);
+        return {
+            metadata,
+            content: contentObj?.content || ''
+        };
+    }, [docId]);
 }
 
-export const updateDocTitle = (docId: number, title: string) => {
+export const updateDocTitle = (docId: number | undefined, title: string) => {
     return db.metadata.update(docId, {
         title: title
     })
 }
 
-export const updateContent = (docId: number, content: string) => {
+export const updateContent = (docId: number | undefined, content: string) => {
+    if (docId === undefined) return;
     db.contents.update(docId, {
         content: content
     })
 }
 
-export const deleteDoc = async (docId: number) => {
-  return await db.transaction('rw', db.metadata, db.contents, () => {
-    db.metadata.delete(docId);
-    db.contents.delete(docId);
-  });
-}
+export const deleteDoc = async (docId: number | undefined) => {
+    if (docId === undefined) return;
+
+    return await db.transaction('rw', db.metadata, db.contents, async () => {
+        const count = await db.metadata.count();
+        let nextId: number | undefined;
+
+        if (count <= 1) {
+            nextId = await db.metadata.add({
+                title: "Untitled Document",
+                updatedAt: Date.now(),
+            });
+            await db.contents.add({ id: nextId as number, content: '' });
+        } else {
+            const all = await db.metadata.toArray();
+            const fallback = all.find(d => d.id !== docId);
+            nextId = fallback?.id;
+        }
+
+        await db.metadata.delete(docId);
+        await db.contents.delete(docId);
+
+        return nextId;
+    });
+};
 
 
 
