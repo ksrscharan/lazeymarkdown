@@ -2,12 +2,17 @@ import { useEffect } from 'react';
 import './App.css'
 import TextArea from './components/TextArea'
 import { useLocalStorage } from './operations/activeIdHook';
-import { createNewFile, initDB } from './operations/basics';
+import { createNewFile, fetchFileContentById, initDB } from './operations/basics';
 import Tabs from './components/Tabs';
 import PreviewArea from './components/PreviewArea';
+import { exportToHtml, exportToMd, exportToPdf } from './operations/export';
+
+
+
 
 function App() {
   const [activeId, setActiveId] = useLocalStorage<number | undefined>('active-doc', undefined);
+  const title = fetchFileContentById(activeId)?.metadata?.title
   useEffect(() => {
     initDB()
   }, [])
@@ -22,7 +27,9 @@ function App() {
           <div className="logo">LazeyMarkdown</div>
           <div className="action-buttons">
             <button className="new-file-button" onClick={createNewFile}>Create File</button>
-            <button className="export-button">Export File</button>
+            <button className="export-button" onClick={() => exportToHtml(title)}>Export HTML</button>
+            <button className="export-button" onClick={() => exportToPdf(title as string)}>Export PDF</button>
+            <button className="export-button" onClick={() => exportToMd(title as string)}>Export MD</button>
           </div>
         </div>
         <Tabs activeId={activeId} setActiveId={setActiveId} />
