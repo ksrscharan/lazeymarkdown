@@ -2,7 +2,7 @@ import { fetchFileContentById } from '../operations/basics';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
-
+import 'github-markdown-css/github-markdown-light.css'; 
 
 type Props = {
     activeId: number | undefined
@@ -15,7 +15,6 @@ function PreviewArea({ activeId }: Props) {
     return (
         <div className="preview-area markdown-body">
             <Markdown
-
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeHighlight]}
                 components={{
