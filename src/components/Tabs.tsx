@@ -16,7 +16,7 @@ function Tabs({ activeId, setActiveId }: Props) {
                         key={doc.id}
                         className="active-tab"
                         onClick={() => setActiveId(doc.id)}>
-                        {doc.title} - {doc.id}
+                        {doc.title}
                         <button
                             className="active-delete-button"
                             onClick={async (e) => {
@@ -33,7 +33,7 @@ function Tabs({ activeId, setActiveId }: Props) {
                         className="tab"
                         onClick={() => setActiveId(doc.id)}
                     >
-                        {doc.title} - {doc.id}
+                        {doc.title}
                         <button
                             className="delete-button"
                             onClick={() => {
