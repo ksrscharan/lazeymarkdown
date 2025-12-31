@@ -1,4 +1,5 @@
-import { deleteDoc, fetchList } from '../operations/basics'
+import { useState } from 'react';
+import { deleteDoc, fetchList, updateDocTitle } from '../operations/basics'
 
 type Props = {
     activeId: number | undefined;
@@ -6,6 +7,7 @@ type Props = {
 }
 
 function Tabs({ activeId, setActiveId }: Props) {
+    const [clicked, setClicked] = useState<boolean>(false)
 
     const docsList = fetchList()
     return (
@@ -15,8 +17,9 @@ function Tabs({ activeId, setActiveId }: Props) {
                     <div
                         key={doc.id}
                         className="active-tab"
-                        onClick={() => setActiveId(doc.id)}>
-                        {doc.title}
+                        onClick={() => setActiveId(doc.id)}
+                    >
+                        {(clicked && doc.id === activeId) ? <input onChange={(e) => updateDocTitle(doc.id, e.target.value)} value={doc.title} /> : doc.title}
                         <button
                             className="active-delete-button"
                             onClick={async (e) => {
@@ -25,13 +28,21 @@ function Tabs({ activeId, setActiveId }: Props) {
                                 setActiveId(nextId);
                             }}
                         >
-                            Delete
+                            🗑️
+                        </button>
+                        <button
+                            className="rename-title"
+                            onClick={() => setClicked(!clicked)}
+                        >
+                            {clicked ? "✔️" : "✏️"}
                         </button>
                     </div> :
                     <div
                         key={doc.id}
                         className="tab"
-                        onClick={() => setActiveId(doc.id)}
+                        onClick={() => {
+                            setActiveId(doc.id)
+                        }}
                     >
                         {doc.title}
                         <button
@@ -41,7 +52,7 @@ function Tabs({ activeId, setActiveId }: Props) {
                                 setActiveId(docsList[0].id)
                             }}
                         >
-                            Delete
+                            🗑️
                         </button>
                     </div>
 
