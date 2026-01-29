@@ -6,7 +6,9 @@ type Props = {
     setActiveId: (id: number | undefined) => void;
 }
 
-function Tabs({ activeId, setActiveId }: Props) {
+function Tabs(
+    { activeId, setActiveId }: Props
+) {
     const [clicked, setClicked] = useState<boolean>(false)
 
     const docsList = fetchList()
