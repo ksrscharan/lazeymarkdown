@@ -1,8 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../db";
 
-
-
 export const createNewFile = async () => {
     return await db.transaction('rw', db.metadata, db.contents, async () => {
         const newId = await db.metadata.add({
@@ -14,14 +12,15 @@ export const createNewFile = async () => {
             id: newId as number,
             content: ''
         });
-
         return newId;
     });
 };
+
 export const initDB = async () => {
     const count = await db.metadata.count();
     if (count === 0) {
-        await createNewFile()
+        const id = await createNewFile()
+        localStorage.setItem('active-doc', id)
     }
 };
 
@@ -79,19 +78,3 @@ export const deleteDoc = async (docId: number | undefined) => {
         return nextId;
     });
 };
-
-
-
-
-/*
-1. Init DB 🔥
-2. Create new Doc 🔥
-3. Fetch Docs 🔥
-    3.1. Fetch One Item in Doc 🔥
-4. Update Doc
-    4.1. Update Title 🔥
-    4.2. Update Content 🔥
-    4.3. Update Open Status ❌ (changed to localStorage based storage to store currentOpen)
-5. Delete Doc
-    5.1. Change opened Doc when present opened one is Deleted ❌ (not here)
-*/

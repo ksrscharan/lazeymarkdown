@@ -7,21 +7,19 @@ import Tabs from './components/Tabs';
 import PreviewArea from './components/PreviewArea';
 import { exportToHtml, exportToMd, exportToPdf } from './operations/export';
 
-
-
-
 function App() {
   const [activeId, setActiveId] = useLocalStorage<number | undefined>('active-doc', undefined);
   const title = fetchFileContentById(activeId)?.metadata?.title
   useEffect(() => {
-    initDB()
+    if (!activeId) {
+      initDB()
+      setActiveId(1)
+    }
   }, [])
-
 
   return (
     <>
       {!activeId === undefined && <div>Loading Your Documents</div>}
-
       <>
         <div className="navbar">
           <div className="logo">LazeyMarkdown</div>
